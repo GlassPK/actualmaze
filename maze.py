@@ -2,14 +2,15 @@
 import pygame
 import intersects
 import random
+import wall_list
 
 # Initialize game engine
 pygame.init()
 
 
 # Window
-WIDTH = 1250
-HEIGHT = 975
+WIDTH = 1000
+HEIGHT = 750
 SIZE = (WIDTH, HEIGHT)
 TITLE = "Maze"
 screen = pygame.display.set_mode(SIZE)
@@ -37,26 +38,12 @@ player_vy = 0
 player_speed = 5
 
 # make walls
-wall1 =  [100, 0, 25, 175]
-wall2 =  [175, 0, 25, 175]
-wall3 =  [40, 225, 180, 25]
-wall4 =  [40, 0, 25, 225]
-wall5 =  [220, 225, 25, 300]
-wall6 =  [295, 225, 25, 390]
-wall7 =  [20, 550, 275, 25]
-
-
-walls = [wall1, wall2, wall3, wall4, wall5, wall6, wall7]
+walls = wall_list.wall_list()
 
 # Make coins
-coin1 = [320, 500, 25, 25]
-coin2 = [400, 200, 25, 25]
-coin3 = [150, 175, 25, 25]
-coin4 = [70, 0, 25, 25]
-coin5 = [70, 30, 25, 25]
-coin6 = [70, 60, 25, 25]
 
-coins = [coin1, coin2, coin3, coin4, coin5, coin6]
+
+coins = []
 
 randomcolors = False
 # Game loop
@@ -124,10 +111,12 @@ while not done:
                 player[1] = w[1] + w[3]
 
     '''filthy prank'''
-    if player[0] >= 40 and player[0] <= 100:
+
+    '''if player[0] >= 40 and player[0] <= 100:
         if player[1] <= 70:
             prankwall = [65, 150, 35, 25]
-            walls.append(prankwall)
+            walls.append(prankwall)'''
+    
     ''' here is where you should resolve player collisions with screen edges '''
     if player[1] < 0:
         player[1] = 0
