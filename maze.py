@@ -4,6 +4,7 @@ import intersects
 import random
 import wall_list
 
+
 # Initialize game engine
 pygame.init()
 
@@ -21,6 +22,28 @@ pygame.display.set_caption(TITLE)
 clock = pygame.time.Clock()
 refresh_rate = 60
 
+
+#Define functions
+BLUE = [0, 0, 255]
+GREEN = [0, 255, 0]
+RED = [255, 0, 0]
+
+def key(color, x, y):
+    if color == 1:
+        COLOR = RED
+    if color == 2:
+        COLOR = GREEN
+    if color == 3:
+        COLOR = BLUE
+
+    pygame.draw.rect(screen, COLOR, [x, y, 12, 4])
+    pygame.draw.rect(screen, COLOR, [x, y+4, 4, 4])
+    pygame.draw.rect(screen, COLOR, [x, y+8, 12, 4])
+    pygame.draw.rect(screen, COLOR, [x+8, y+4, 4, 4])
+    pygame.draw.rect(screen, COLOR, [x+4, y+12, 4, 16])
+    pygame.draw.rect(screen, COLOR, [x+8, y+16, 4, 4])
+    pygame.draw.rect(screen, COLOR, [x+8, y+24, 4, 4])
+    
 # Colors
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
@@ -127,7 +150,7 @@ while not done:
     if player[0] + player[2] > WIDTH:
         player[0] = WIDTH - player[2]
     
-
+    
 
     ''' get the coins '''
     #coins = [c for c in coins if not intersects.rect_rect(player, c)]
@@ -146,7 +169,11 @@ while not done:
         if randomcolors:
             WALL = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
         pygame.draw.rect(screen, WALL, w)
-        
+
+
+    #Draw keys
+    key(3, 625, 75)
+    
     #COIN = (random.randint(30,255),random.randint(30,255),random.randint(30,255))
     
     

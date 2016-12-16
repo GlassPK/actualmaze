@@ -64,6 +64,23 @@ def wall_list():
     wall63 = [475, 425, 25, 125]
     wall64 = [475, 575, 25, 150]
     wall65 = [450, 475, 25, 25]
+    wall66 = [475, 525, 25, 25]
+    wall67 = [450, 575, 25, 25]
+    wall68 = [475, 625, 25, 25]
+    wall69 = [450, 675, 25, 25]
+    wall70 = [525, 525, 50, 25]
+    wall71 = [525, 575, 50, 25]
+    wall72 = [650, 425, 25, 100]
+    wall73 = [700, 425, 25, 100]
+    wall74 = [725, 600, 25, 125]
+    wall75 = [775, 600, 175, 25]
+    wall76 = [800, 525, 150, 25]
+    wall77 = [800, 425, 25, 75]
+    wall78 = [775, 650, 50, 25]
+    wall79 = [800, 725, 25, 25]
+    wall80 = [825, 625, 25, 75]
+    wall81 = [875, 650, 25, 75]
+    wall82 = [850, 450, 75, 50]
 
 
     walls = [wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10,
@@ -72,6 +89,8 @@ def wall_list():
              wall31, wall32, wall33, wall34, wall35, wall36, wall37, wall38, wall39, wall40,
              wall41, wall42, wall43, wall44, wall45, wall46, wall47, wall48, wall49, wall50,
              wall51, wall52, wall53, wall54, wall55, wall56, wall57, wall58, wall59, wall60,
-             wall61, wall62, wall63, wall64, wall65]
+             wall61, wall62, wall63, wall64, wall65, wall66, wall67, wall68, wall69, wall70,
+             wall71, wall72, wall73, wall74, wall75, wall76, wall77, wall78, wall79, wall80,
+             wall81, wall82]
              
     return walls
