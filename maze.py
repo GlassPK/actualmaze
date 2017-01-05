@@ -13,7 +13,7 @@ pygame.init()
 WIDTH = 1000
 HEIGHT = 750
 SIZE = (WIDTH, HEIGHT)
-TITLE = "Maze"
+TITLE = "Maze Game"
 screen = pygame.display.set_mode(SIZE)
 pygame.display.set_caption(TITLE)
 
@@ -22,11 +22,23 @@ pygame.display.set_caption(TITLE)
 clock = pygame.time.Clock()
 refresh_rate = 60
 
+time_remaining = 120
+ticks = 0
+#define functions 
+def format_time(seconds):
+    m = seconds // 60
+    s = seconds % 60
 
-#Define functions
-BLUE = [0, 0, 255]
-GREEN = [0, 255, 0]
-RED = [255, 0, 0]
+    if s < 10:
+        s = "0" + str(s)
+
+    return str(m) + ":" + str(s)
+
+def lock(x, y):
+    pygame.draw.rect(screen, BLACK, [x, y+12, 18, 12])
+    pygame.draw.rect(screen, BLACK, [x+5, y+6, 8, 2])
+    pygame.draw.rect(screen, BLACK, [x+5, y+8, 2, 4])
+    pygame.draw.rect(screen, BLACK, [x+11, y+8, 2, 4])
 
 def key(color, x, y):
     if color == 1:
@@ -46,6 +58,7 @@ def key(color, x, y):
     
 # Colors
 RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 COIN = (255, 255, 0)
@@ -55,7 +68,7 @@ WALL = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
 
 
 # Make a player
-player =  [137, 0, 25, 25]
+player =  [25, 25, 25, 25]
 player_vx = 0
 player_vy = 0
 player_speed = 5
@@ -141,6 +154,16 @@ while not done:
             walls.append(prankwall)'''
     
     ''' here is where you should resolve player collisions with screen edges '''
+
+    ticks += 1
+
+    if ticks % refresh_rate == 0:
+        time_remaining -= 1
+
+    if time_remaining == 0:
+        lose = True
+
+
     if player[1] < 0:
         player[1] = 0
     if player[1] + player[3] > HEIGHT:
@@ -170,7 +193,16 @@ while not done:
             WALL = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
         pygame.draw.rect(screen, WALL, w)
 
-
+    #Draw locks
+    #Blue
+    pygame.draw.rect(screen, BLUE, [225, 550, 25, 25])
+    lock(227, 548)
+    #Green
+    pygame.draw.rect(screen, GREEN, [25, 475, 25, 25])
+    lock(27, 472)
+    #Red
+    pygame.draw.rect(screen, RED, [175, 450, 25, 25])
+    lock(177, 448)
     #Draw keys
     key(3, 625, 75)
     
@@ -190,12 +222,16 @@ while not done:
     if len(coins) == 0:
         win = True
     
-        
-    if win:
+    #Timer
+    font = pygame.font.Font(None, 64)
+    timer_text = font.render(format_time(time_remaining), True, WHITE)
+    screen.blit(timer_text, [900, 0])
+    
+    '''if win:
         font = pygame.font.Font(None, 64)
         WINCOLOR = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
         text = font.render("You Win!", 1, WINCOLOR)
-        screen.blit(text, [(WIDTH/2)-96, (HEIGHT/2)-32]) 
+        screen.blit(text, [(WIDTH/2)-96, (HEIGHT/2)-32])  '''
 
     font = pygame.font.Font(None, 64)
     text1 = font.render("Score: " + str(score), True, WHITE)
