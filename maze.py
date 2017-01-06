@@ -17,12 +17,12 @@ TITLE = "Maze Game"
 screen = pygame.display.set_mode(SIZE)
 pygame.display.set_caption(TITLE)
 
-
+stage = 1
 # Timer
 clock = pygame.time.Clock()
 refresh_rate = 60
-
-time_remaining = 120
+begintime = 60
+time_remaining = 60
 ticks = 0
 #define functions 
 def format_time(seconds):
@@ -65,8 +65,35 @@ COIN = (255, 255, 0)
 GREEN = (0, 255, 0)
 PlayerColor = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
 WALL = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
+YELLOW = (255, 255, 0)
 
+#make goals
+bluebox1 = [75, 600, 50, 10]
+bluebox2 = [75, 600, 10, 50]
+bluebox3 = [75, 650, 50, 10]
+bluebox4 = [125, 600, 10, 60]
 
+greenbox1 = [63, 588, 75, 10]
+greenbox2 = [63, 588, 10, 75]
+greenbox3 = [63, 663, 75, 10]
+greenbox4 = [138, 588, 10, 85]
+
+redbox1 = [50, 575, 100, 10]
+redbox2 = [50, 575, 10, 100]
+redbox3 = [150, 575, 10, 100]
+redbox4 = [50, 675, 110, 10]
+
+bluetouch = False
+greentouch = False
+redtouch = False
+
+bluelock = [225, 550, 25, 25]
+redlock = [175, 450, 25, 25]
+greenlock = [25, 475, 25, 25] 
+
+bluegoal = [bluebox1, bluebox2, bluebox3, bluebox4]
+redgoal = [redbox1, redbox2, redbox3, redbox4]
+greengoal = [greenbox1, greenbox2, greenbox3, greenbox4]
 # Make a player
 player =  [25, 25, 25, 25]
 player_vx = 0
@@ -76,17 +103,36 @@ player_speed = 5
 # make walls
 walls = wall_list.wall_list()
 
-# Make coins
+#make toggle walls
+
+switch = [452, 703, 20, 20]
+
+switchwall1 = [900, 500, 75, 25]
+switchwall2 = [825, 475, 25, 25]
+
+switchwalls = [switchwall1, switchwall2]
+
+# Make key hitboxes
+bluekey = [944, 34, 14, 28]
+greenkey = [455, 35, 14, 28]
+redkey = [944, 459, 14, 28]
 
 
-coins = []
+blukeylist = [bluekey]
+grnkeylist = [greenkey]
+rdkeylist = [redkey]
 
+haskey_blue = False
+haskey_green = False
+haskey_red = False
+
+switched = False
 randomcolors = False
 # Game loop
 win = False
 done = False
 score = 0
-
+stage = 1
 while not done:
     # Event processing (React to key presses, mouse clicks, etc.)
     ''' for now, we'll just check to see if the X is clicked '''
@@ -94,10 +140,16 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
         elif event.type == pygame.KEYDOWN:
+            
             if event.key == pygame.K_SPACE:
-                PlayerColor = (random.randint(1,255),random.randint(1,255),random.randint(1,255))
+                    PlayerColor = (random.randint(1,255),random.randint(1,255),random.randint(1,255))
             if event.key == pygame.K_r:
-                randomcolors = not randomcolors
+                    randomcolors = not randomcolors
+
+    
+    
+   
+       
 
     pressed = pygame.key.get_pressed()
 
@@ -135,6 +187,38 @@ while not done:
             elif player_vx < 0:
                 player[0] = w[0] + w[2]
 
+    if not redtouch:
+        for w in redgoal:
+            if intersects.rect_rect(player, w):        
+                if player_vx > 0:
+                    player[0] = w[0] - player[2]
+                elif player_vx < 0:
+                    player[0] = w[0] + w[2]
+
+    if not greentouch:
+        for w in greengoal:
+            if intersects.rect_rect(player, w):        
+                if player_vx > 0:
+                    player[0] = w[0] - player[2]
+                elif player_vx < 0:
+                    player[0] = w[0] + w[2]
+
+    if not bluetouch:
+        for w in bluegoal:
+            if intersects.rect_rect(player, w):        
+                if player_vx > 0:
+                    player[0] = w[0] - player[2]
+                elif player_vx < 0:
+                    player[0] = w[0] + w[2]
+
+    if not switched:
+        for w in switchwalls:
+            if intersects.rect_rect(player, w):        
+                if player_vx > 0:
+                    player[0] = w[0] - player[2]
+                elif player_vx < 0:
+                    player[0] = w[0] + w[2]
+
     ''' move the player in vertical direction '''
     player[1] += player_vy
     
@@ -146,6 +230,89 @@ while not done:
             if player_vy < 0:
                 player[1] = w[1] + w[3]
 
+    if not redtouch:
+        for w in redgoal:
+            if intersects.rect_rect(player, w):                    
+                if player_vy > 0:
+                    player[1] = w[1] - player[3]
+                if player_vy < 0:
+                    player[1] = w[1] + w[3]
+
+    if not bluetouch:
+        for w in bluegoal:
+            if intersects.rect_rect(player, w):                    
+                if player_vy > 0:
+                    player[1] = w[1] - player[3]
+                if player_vy < 0:
+                    player[1] = w[1] + w[3]
+
+    if not greentouch:
+        for w in greengoal:
+            if intersects.rect_rect(player, w):                    
+                if player_vy > 0:
+                    player[1] = w[1] - player[3]
+                if player_vy < 0:
+                    player[1] = w[1] + w[3]
+
+    if not switched:
+        for w in switchwalls:
+            if intersects.rect_rect(player, w):                    
+                if player_vy > 0:
+                    player[1] = w[1] - player[3]
+                if player_vy < 0:
+                    player[1] = w[1] + w[3]
+
+    if intersects.rect_rect(player, switch):
+        switched = True
+
+    if haskey_blue:
+        if intersects.rect_rect(player, bluelock):
+            bluetouch = True
+    if haskey_green:
+        if intersects.rect_rect(player, greenlock):
+            greentouch = True
+    if haskey_red:
+        if intersects.rect_rect(player, redlock):
+            redtouch = True
+                            
+    for b in blukeylist:
+        if intersects.rect_rect(player, b):
+            haskey_blue = True
+
+    for g in grnkeylist:
+        if intersects.rect_rect(player, g):
+            haskey_green = True
+
+    for r in rdkeylist:
+        if intersects.rect_rect(player, r):
+            haskey_red = True
+
+    
+    ''' win '''
+    winblock = [95, 620, 20, 20]
+    if intersects.rect_rect(player, winblock):
+        win = True
+    
+    
+    '''warps'''
+
+    if player[1] == -25 and player_vy < 2:
+        player[0] = 700
+        player[1] = 775
+
+    if player[0] == -25 and player_vx < 2:
+        player[0] = 1025
+        player[1] = 225
+
+    if player[0] == 1025 and player_vx > 2:
+        player[0] = -25
+        player[1] = 25
+
+    if player[1] == 775 and player_vy > 2:
+        player[0] = 25
+        player[1] = -25
+
+        
     '''filthy prank'''
 
     '''if player[0] >= 40 and player[0] <= 100:
@@ -154,6 +321,28 @@ while not done:
             walls.append(prankwall)'''
     
     ''' here is where you should resolve player collisions with screen edges '''
+
+    
+    if not player[0] < 75:
+        if not player[0] == 700 and player[1] > 700:
+            if not player[0] > 975 and player[1] == 225:
+
+                if player[1] < 0:
+                    player[1] = 0
+                if player[1] + player[3] > HEIGHT:
+                    player[1] = HEIGHT - player[3]
+                if player[0] < 0:
+                    player[0] = 0
+                if player[0] + player[2] > WIDTH:
+                    player[0] = WIDTH - player[2]
+    screen.fill(BLACK)
+
+
+    
+    
+    '''timer stuff'''
+   
+   
 
     ticks += 1
 
@@ -164,17 +353,6 @@ while not done:
         lose = True
 
 
-    if player[1] < 0:
-        player[1] = 0
-    if player[1] + player[3] > HEIGHT:
-        player[1] = HEIGHT - player[3]
-    if player[0] < 0:
-        player[0] = 0
-    if player[0] + player[2] > WIDTH:
-        player[0] = WIDTH - player[2]
-    
-    
-
     ''' get the coins '''
     #coins = [c for c in coins if not intersects.rect_rect(player, c)]
 
@@ -182,7 +360,7 @@ while not done:
 
         
     # Drawing code (Describe the picture. It isn't actually drawn yet.)
-    screen.fill(BLACK)
+    #screen.fill(BLACK)
     if randomcolors:
         PlayerColor = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
     pygame.draw.rect(screen, PlayerColor, player)
@@ -193,23 +371,87 @@ while not done:
             WALL = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
         pygame.draw.rect(screen, WALL, w)
 
+    if not switched:
+        for w in switchwalls:
+            pygame.draw.rect(screen, YELLOW, w)
+
+    pygame.draw.rect(screen, YELLOW, switch)
+
     #Draw locks
     #Blue
+    
     pygame.draw.rect(screen, BLUE, [225, 550, 25, 25])
-    lock(227, 548)
+    if haskey_blue == False:
+        lock(227, 548)
     #Green
     pygame.draw.rect(screen, GREEN, [25, 475, 25, 25])
-    lock(27, 472)
+    if haskey_green == False:
+        lock(27, 472)
     #Red
     pygame.draw.rect(screen, RED, [175, 450, 25, 25])
-    lock(177, 448)
+    if haskey_red == False:
+        lock(177, 448)
     #Draw keys
-    key(3, 625, 75)
+
+
+    keys = [bluekey]
+    #blue key
+    if haskey_blue == False:
+        key(3, 945, 35)
+
+    #green key
+    if haskey_green == False:
+        key(2, 455, 35)
+
+    #red key
+    if haskey_red == False:
+        key(1, 945, 460)
+    
+    #goal walls
+
+    redbox1 = [50, 575, 100, 10]
+    redbox2 = [50, 575, 10, 100]
+    redbox3 = [150, 575, 10, 100]
+    redbox4 = [50, 675, 110, 10]
+    if not redtouch:
+        pygame.draw.rect(screen, RED, [50, 575, 100, 10])
+        pygame.draw.rect(screen, RED, [50, 575, 10, 100])
+        pygame.draw.rect(screen, RED, [150, 575, 10, 100])
+        pygame.draw.rect(screen, RED, [50, 675, 110, 10])
+
+    redgoal = [redbox1, redbox2, redbox3, redbox4]
+
+    greenbox1 = [63, 588, 75, 10]
+    greenbox2 = [63, 588, 10, 75]
+    greenbox3 = [63, 663, 75, 10]
+    greenbox4 = [138, 588, 10, 85]
+    if not greentouch:
+        pygame.draw.rect(screen, GREEN, greenbox1)
+        pygame.draw.rect(screen, GREEN, greenbox2)
+        pygame.draw.rect(screen, GREEN, greenbox3)
+        pygame.draw.rect(screen, GREEN, greenbox4)
+
+    greengoal = [greenbox1, greenbox2, greenbox3, greenbox4]
+
+    bluebox1 = [75, 600, 50, 10]
+    bluebox2 = [75, 600, 10, 50]
+    bluebox3 = [75, 650, 50, 10]
+    bluebox4 = [125, 600, 10, 60]
+    if not bluetouch:
+        pygame.draw.rect(screen, BLUE, bluebox1)
+        pygame.draw.rect(screen, BLUE, bluebox2)
+        pygame.draw.rect(screen, BLUE, bluebox3)
+        pygame.draw.rect(screen, BLUE, bluebox4)
+
+    bluegoal = [bluebox1, bluebox2, bluebox3, bluebox4]
+    
+    pygame.draw.rect(screen, WHITE, [95, 620, 20, 20])
+
     
     #COIN = (random.randint(30,255),random.randint(30,255),random.randint(30,255))
     
     
-    for c in coins:
+    '''for c in coins:
         if randomcolors:
             COIN = (random.randint(30,255),random.randint(30,255),random.randint(30,255))
         pygame.draw.rect(screen, COIN, c)
@@ -220,22 +462,22 @@ while not done:
         coins.remove(hit)
         score += 100
     if len(coins) == 0:
-        win = True
+        win = True  '''
     
     #Timer
     font = pygame.font.Font(None, 64)
     timer_text = font.render(format_time(time_remaining), True, WHITE)
     screen.blit(timer_text, [900, 0])
     
-    '''if win:
+    if win:
         font = pygame.font.Font(None, 64)
         WINCOLOR = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
         text = font.render("You Win!", 1, WINCOLOR)
-        screen.blit(text, [(WIDTH/2)-96, (HEIGHT/2)-32])  '''
+        screen.blit(text, [(WIDTH/2)-96, (HEIGHT/2)-32])
+        score = begintime - time_remaining
+        
 
-    font = pygame.font.Font(None, 64)
-    text1 = font.render("Score: " + str(score), True, WHITE)
-    screen.blit(text1, [0, 0])
+    
     
     # Update screen (Actually draw the picture in the window.)
     pygame.display.flip()
@@ -244,6 +486,6 @@ while not done:
     # Limit refresh rate of game loop 
     clock.tick(refresh_rate)
 
-
+    
 # Close window and quit
 pygame.quit()
